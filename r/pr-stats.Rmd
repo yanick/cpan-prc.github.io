@@ -21,6 +21,13 @@ tally_melted <- melt(tally, vars=c("challenges","success") )
 ggplot( tally_melted, aes(  date, value, color=variable) ) + geom_point()
 ```
 
+### Completion rates
+
+```{r, echo = FALSE}
+tally$percent_success <- tally$success / tally$challenges
+ggplot( tally, aes( date, percent_success ) ) + geom_point()
+```
+
 ## List of participants
 
 ```{r, echo = FALSE}
