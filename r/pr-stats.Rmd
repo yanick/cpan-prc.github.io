@@ -1,0 +1,30 @@
+---
+title: CPAN Challenge Stats
+output: html_document
+---
+
+```{r, include=FALSE}
+library('ggplot2')
+library('dplyr')
+library('knitr')
+library('tidyr')
+library('reshape2')
+
+challenges   <- read.csv( "./challenges.csv", header=TRUE, sep="|", strip.white=TRUE )
+tally        <- challenges %>% group_by(date) %>% summarize( challenges = n(), success = sum(done>0) )
+tally_melted <- melt(tally, vars=c("challenges","success") )
+```
+
+## Challenges, month by month
+
+```{r, echo = FALSE}
+ggplot( tally_melted, aes(  date, value, color=variable) ) + geom_point()
+```
+
+## List of participants
+
+```{r, echo = FALSE}
+participants <- unique( challenges$assignee ) 
+
+knitr::kable( participants, caption = "all participants"  )
+```
