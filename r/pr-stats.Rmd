@@ -24,7 +24,7 @@ ggplot( tally_melted, aes(  date, value, color=variable) ) + geom_point()
 ## List of participants
 
 ```{r, echo = FALSE}
-participants <- unique( challenges$assignee ) 
+participants <- sort(unique( challenges$assignee ))
 
 knitr::kable( participants, caption = "all participants"  )
 ```
