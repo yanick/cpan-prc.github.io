@@ -44,22 +44,6 @@ for my $year( 2015..2018 ) {
     
 }
 
-my @challenge_fields = qw/ date done assignee distname dist_author /;
-unshift @challenges, map { $_ => $_ } 
+serialize_file 'challenges.json' => \@challenges;
 
-path( 'challenges.csv' )->spew(
-    map { $_ . "\n" }
-    map { join ' | ', $_->@{ @challenge_fields } }
-    ( { map { ($_)x2 } @challenge_fields } ), @challenges 
-);
-
-
-
-my @pr_fields = qw/ date assignee distname state pr /;
-unshift @prs, map { $_ => $_ } 
-
-path( 'prs.csv' )->spew(
-    map { $_ . "\n" }
-    map { join ' | ', $_->@{ @pr_fields } }
-    ( { map { ($_)x2 } @pr_fields } ), @prs
-);
+serialize_file 'prs.json' => \@prs;

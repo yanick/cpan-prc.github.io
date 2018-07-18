@@ -9,8 +9,9 @@ library('dplyr')
 library('knitr')
 library('tidyr')
 library('reshape2')
+library('jsonlite')
 
-challenges   <- read.csv( "./challenges.csv", header=TRUE, sep="|", strip.white=TRUE )
+challenges   <- fromJSON( "./challenges.json", )
 tally        <- challenges %>% group_by(date) %>% summarize( challenges = n(), success = sum(done>0) )
 tally_melted <- melt(tally, vars=c("challenges","success") )
 ```
@@ -28,10 +29,39 @@ tally$percent_success <- tally$success / tally$challenges
 ggplot( tally, aes( date, percent_success ) ) + geom_point()
 ```
 
-## List of participants
+## List of participants 
+
+All in all, there are been a total of `r length(unique(challenges$assignee))`
+participants.
 
 ```{r, echo = FALSE}
-participants <- sort(unique( challenges$assignee ))
+p <- challenges %>% 
+        group_by(assignee) %>% 
+        filter( done ) %>% 
+        summarize( months=n(), earliest=first(date), latest=last(date) ) %>% 
+        arrange(desc( months),desc(latest))
 
-knitr::kable( participants, caption = "all participants"  )
+knitr::kable( p, caption = "all participants"  )
 ```
+
+```{r, echo=FALSE}
+
+ggplot(p, mapping=aes(months)) + geom_histogram()
+```
+
+## PR stats 
+
+```{r, echo=FALSE}
+
+prs  <- fromJSON('./prs.json')
+
+```
+
+Over `r nrow(prs)` PRs were generated over the span of the CPAN Challenge.
+
+```{r}
+
+barplot(table(prs$state),main="state of PRs")
+
+```
+
