@@ -1,0 +1,16 @@
+## PR stats 
+
+```{r, echo=FALSE}
+
+prs  <- fromJSON('./prs.json')
+
+```
+
+Over `r nrow(prs)` PRs were generated over the span of the CPAN Challenge.
+
+```{r}
+
+barplot(table(prs$state),main="state of PRs")
+
+```
+
